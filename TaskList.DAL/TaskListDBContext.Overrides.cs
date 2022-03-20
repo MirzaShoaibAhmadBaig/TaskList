@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TaskList.Domain;
 
@@ -71,7 +72,7 @@ namespace TaskList.DAL
         }
 
 
-        private string GetLoggedInEmployee()
+        private string GetLoggedInEmployeeId()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if(httpContext!=null)
@@ -91,11 +92,58 @@ namespace TaskList.DAL
         }
 
 
-        //private void OnBeforeSaving()
-        //{
+        private void OnBeforeSaving()
+        {
+            var entries = ChangeTracker.Entries();
+            foreach (var entry in entries)
+            {
+
+                if(entry.Entity is BaseEntity trackable)
+                {
+                    var now = DateTime.Now;
+                    var userId = GetLoggedInEmployeeId();
+
+                    switch (entry.State)
+                    {
+                       
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Modified;
+                            trackable.UpdatedBy = userId;
+                            trackable.IsDeleted=true;
+                            trackable.Updateddate = now;
+                            break;
+                        case EntityState.Modified:
+                            trackable.UpdatedBy =userId;
+                            trackable.Updateddate = now;
+                            break;
+                        case EntityState.Added:
+                            trackable.CreatedDate = now;
+                            trackable.Updateddate = now;
+                            trackable.UpdatedBy = userId;
+                            trackable.CreatedBy = userId;
+                            trackable.IsDeleted = false;
+                            break;
+                    }
+
+                }
+            }
+        }
+
+        public override int SaveChanges()
+        {
+            OnBeforeSaving();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+
+            OnBeforeSaving();
+            return base.SaveChangesAsync();
+
+        }
 
 
 
-        //}
     }
 }
