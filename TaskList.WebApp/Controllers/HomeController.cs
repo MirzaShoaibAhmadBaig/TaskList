@@ -22,7 +22,7 @@ namespace TaskList.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View(_db.TaskItem.AsEnumerable());
+            return View();
         }
 
         public IActionResult Privacy()
