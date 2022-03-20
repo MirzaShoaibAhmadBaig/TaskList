@@ -18,6 +18,8 @@
                     <td>Task Name</td>
                     <td>Is Task Completed</td>
                     <td>Task Created</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +41,8 @@
 
                             </td>
 
-
+                            <td>@Html.ActionLink("Update","Edit","Task",new { Id=item.Id}, new { @class = "btn btn-primary" })</td>
+                            <td>@Html.ActionLink("Delete", "Delete","Task", new { Id = item.Id,},new { @class="btn btn-danger"})</td>
                         </tr>
                     }
 

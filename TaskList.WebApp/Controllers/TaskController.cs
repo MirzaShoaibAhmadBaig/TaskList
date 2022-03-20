@@ -44,7 +44,40 @@ namespace TaskList.WebApp.Controllers
             return View(item);
 
         }
-            
-            
+
+
+        public IActionResult Edit(int Id)
+        {
+
+            return View(_db.TaskItem.FirstOrDefault(x => x.Id==Id));
+        }
+
+        [HttpPost]
+        public IActionResult Edit(TaskItem item)
+        {
+            if (ModelState.IsValid)
+            {
+                var model = _db.TaskItem.Find(item.Id);
+                model.TaskName = item.TaskName;
+                model.IsCompleted = item.IsCompleted;
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(item);
+
+        }
+        public IActionResult Delete(int Id)
+        {
+            if(ModelState.IsValid)
+            {
+                var model = _db.TaskItem.Find(Id);
+                _db.TaskItem.Remove(model);
+                _db.SaveChanges();
+
+                
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 }
