@@ -18,7 +18,7 @@ namespace TaskList.DAL
 
         }
 
-       public DbSet<TaskItem> TaskItems { get; set; }
+       public DbSet<TaskItem> TaskItem { get; set; }
 
     }
 }
