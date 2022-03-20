@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,8 @@ namespace TaskList.WebApplication
             services.AddHttpContextAccessor();
             services.AddRazorPages();
             services.AddDbContext<TaskListDBContext>(con=>con.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),mig=>mig.MigrationsAssembly("TaskList.DAL")));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
