@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TaskList.DAL;
+using TaskList.Domain.Model;
 
 namespace TaskList.WebApp.Controllers
 {
@@ -21,5 +22,29 @@ namespace TaskList.WebApp.Controllers
         {
             return View(_db.TaskItem.AsEnumerable());
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+
+
+            return View(new TaskItem());
+        }
+
+        [HttpPost]
+        public IActionResult Create(TaskItem item)
+        {
+            if(ModelState.IsValid)
+            {
+                _db.Add(item);
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            return View(item);
+
+        }
+            
+            
     }
 }
